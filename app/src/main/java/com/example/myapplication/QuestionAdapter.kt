@@ -1,13 +1,27 @@
 package com.example.firebasetest
 
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import java.security.AccessController.getContext
+import java.util.concurrent.TimeUnit
+import kotlin.time.seconds
+import com.google.firebase.FirebaseError
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+
 
 class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>(){
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.question_list, parent, false)
         return ViewHolder(v)
@@ -19,6 +33,26 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question: Question = userlist[position]
+        holder.buttonStart.setOnClickListener {
+            object : CountDownTimer(10000, 1000) {
+
+                override fun onTick(millisUntilFinished: Long) {
+                    question.seconds = ((TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)).toInt())
+                    question.activit = true
+                    updateInFirebaseStartTimer(question)
+                    notifyDataSetChanged()
+                }
+
+                override fun onFinish() {
+                    question.activit = false
+                    updateInFirebaseFinishTimer(question)
+                    notifyDataSetChanged()
+
+                }
+            }.start()
+
+
+        }
         holder.textViewQuestion.text = question.question
         if (question.activit == true) {
             holder.textViewActive.text = "Active"
@@ -26,16 +60,66 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
             holder.textViewActive.text = "Inactive"
         }
         holder.textViewTime.text = question.seconds.toString()
-        if (question.votes.toString().equals("[]")) {
-            holder.textViewUsers.text = "No votes yet"
-        } else {
-            holder.textViewUsers.text = question.votes.toString()
-        }
+
+
+
     }
+
+    private fun updateInFirebaseFinishTimer(question: Question) {
+
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.reference.child("Questions").child("Group").child(roomNumberString).orderByKey()
+
+        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+                    val QuestionResult = ds.getValue(Question::class.java)
+                    val questionText = QuestionResult?.question
+                    if (questionText==question.question){
+                        ds.ref.child("seconds").setValue(0)
+                        ds.ref.child("activit").setValue(false)
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+            }
+        })
+
+    }
+
+    private fun updateInFirebaseStartTimer(question: Question) {
+
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.reference.child("Questions").child("Group").child(roomNumberString).orderByKey()
+
+        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+                    val QuestionResult = ds.getValue(Question::class.java)
+                    val questionText = QuestionResult?.question
+                    if (questionText==question.question){
+                        ds.ref.child("activit").setValue(true)
+                        ds.ref.child("seconds").setValue(question.seconds)
+
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+            }
+        })
+
+    }
+
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val textViewQuestion = itemView.findViewById<TextView>(R.id.textViewQuestion)
         val textViewActive = itemView.findViewById<TextView>(R.id.textViewActive)
-        val textViewUsers = itemView.findViewById<TextView>(R.id.textViewVoted)
         val textViewTime = itemView.findViewById<TextView>(R.id.textViewTime)
+        val buttonStart = itemView.findViewById<Button>(R.id.buttonStartTimer)
     }
 }

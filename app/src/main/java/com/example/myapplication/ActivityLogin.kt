@@ -28,17 +28,12 @@ class ActivityLogin : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // Write a message to the database
-        val mmdatabase = FirebaseDatabase.getInstance()
-        val myRef = mmdatabase.getReference("message")
-
-        myRef.setValue("Hello, World!")
 
         database = FirebaseDatabase.getInstance().reference
         val nameEdit = findViewById<EditText>(R.id.editTextName)
 
         val roomEdit = findViewById<EditText>(R.id.editTextRoomId)
         val button = findViewById<Button>(R.id.button)
-        database.child("users").setValue(1)
         button.setOnClickListener {
 
             if (nameEdit.text.isNotEmpty() && roomEdit.text.isNotEmpty()) {
