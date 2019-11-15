@@ -15,8 +15,7 @@ import com.example.firebasetest.MainActivity
 import com.example.firebasetest.roomNumberString
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
+import android.view.View
 
 
 class ActivityLogin : AppCompatActivity() {
@@ -48,4 +47,6 @@ class ActivityLogin : AppCompatActivity() {
 
         }
     }
+
+    fun onQuestionButtonClicked(view: View) {}
 }

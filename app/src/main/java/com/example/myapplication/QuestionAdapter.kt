@@ -7,16 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import java.security.AccessController.getContext
 import java.util.concurrent.TimeUnit
 import kotlin.time.seconds
 import com.google.firebase.FirebaseError
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 
 class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>(){
@@ -34,23 +32,8 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question: Question = userlist[position]
         holder.buttonStart.setOnClickListener {
-            object : CountDownTimer(10000, 1000) {
 
-                override fun onTick(millisUntilFinished: Long) {
-                    question.seconds = ((TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)).toInt())
-                    question.activit = true
-                    updateInFirebaseStartTimer(question)
-                    notifyDataSetChanged()
-                }
-
-                override fun onFinish() {
-                    question.activit = false
-                    updateInFirebaseFinishTimer(question)
-                    notifyDataSetChanged()
-
-                }
-            }.start()
-
+            timerData(question)
 
         }
         holder.textViewQuestion.text = question.question
@@ -60,7 +43,6 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
             holder.textViewActive.text = "Inactive"
         }
         holder.textViewTime.text = question.seconds.toString()
-
 
 
     }
@@ -78,6 +60,8 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
                     if (questionText==question.question){
                         ds.ref.child("seconds").setValue(0)
                         ds.ref.child("activit").setValue(false)
+
+
                     }
 
                 }
@@ -114,6 +98,23 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
             }
         })
 
+    }
+
+    private fun timerData(question: Question){
+        object : CountDownTimer(10000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                question.seconds = ((TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)).toInt())
+                updateInFirebaseStartTimer(question)
+                notifyDataSetChanged()
+            }
+
+            override fun onFinish() {
+                updateInFirebaseFinishTimer(question)
+                notifyDataSetChanged()
+
+            }
+        }.start()
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

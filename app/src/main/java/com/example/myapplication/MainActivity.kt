@@ -4,18 +4,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
-
-import android.widget.EditText
 
 import androidx.appcompat.app.AlertDialog
 import com.example.myapplication.R
+import com.example.myapplication.VoteFragment
+import com.example.myapplication.VotedUsers
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.dialog_add_question.view.*
-import java.sql.Timestamp
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,30 +30,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        val fragment:ListFragment = ListFragment()
-        val transaction = manager.beginTransaction()
-        transaction.replace(R.id.fragment_holder, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-
+        val user = VotedUsers("k222k", "ss8")
+        database = FirebaseDatabase.getInstance().reference
+        database.child("UserVotes").child("users").push().setValue(user)
 
 
 
     }
 
     fun onAddCliclked(view: View) {
-        showCreateCategoryDialog()
 
+        val fragment:ListFragment = ListFragment()
+        val transaction = manager.beginTransaction()
+        transaction.replace(R.id.fragment_holder, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+        showCreateCategoryDialog()
         Toast.makeText(applicationContext,"Question added",Toast.LENGTH_SHORT).show()
     }
 
 
 
     fun onStartCliclked(view: View) {
-        Toast.makeText(applicationContext,"Group started.",Toast.LENGTH_SHORT).show()
-        database = FirebaseDatabase.getInstance().reference
-        database.child("Questions").child("Group").child("Seconds").setValue("60")
+        val fragment  = VoteFragment()
+        val transaction = manager.beginTransaction()
+        transaction.replace(R.id.fragment_holder, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     fun showCreateCategoryDialog() {
@@ -84,6 +89,10 @@ class MainActivity : AppCompatActivity() {
             //dismiss dialog
             mAlertDialog.dismiss()
         }
+
+    }
+
+    fun addQuestion(view: View) {
 
     }
 }
