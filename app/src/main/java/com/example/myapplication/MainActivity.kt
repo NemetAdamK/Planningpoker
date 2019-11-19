@@ -13,11 +13,6 @@ import com.example.myapplication.VotedUsers
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.dialog_add_question.view.*
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,28 +33,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun onAddCliclked(view: View) {
-
-        val fragment:ListFragment = ListFragment()
-        val transaction = manager.beginTransaction()
-        transaction.replace(R.id.fragment_holder, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-        showCreateCategoryDialog()
-        Toast.makeText(applicationContext,"Question added",Toast.LENGTH_SHORT).show()
-    }
-
-
-
-    fun onStartCliclked(view: View) {
-        val fragment  = VoteFragment()
-        val transaction = manager.beginTransaction()
-        transaction.replace(R.id.fragment_holder, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
 
     fun showCreateCategoryDialog() {
+
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_question, null)
         //AlertDialogBuilder
         val mBuilder = AlertDialog.Builder(this)
@@ -70,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         //login button click of custom layout
         mDialogView.dialogLoginBtn.setOnClickListener {
             //dismiss dialog
+
             mAlertDialog.dismiss()
             //get text from EditTexts of custom layout
             val question = mDialogView.dialogQuestion.text.toString()
@@ -78,11 +55,14 @@ class MainActivity : AppCompatActivity() {
                 database = FirebaseDatabase.getInstance().reference
                 database.child("Questions").child("Group").child(roomNumberString).push().setValue(Question(question,false,ArrayList<VotedUsers>(),60)
                 )
+
             }
            else
             {
                 Toast.makeText(applicationContext,"Empty field",Toast.LENGTH_SHORT).show()
             }
+
+            mAlertDialog.dismiss()
         }
         //cancel button click of custom layout
         mDialogView.dialogCancelBtn.setOnClickListener {
@@ -90,9 +70,33 @@ class MainActivity : AppCompatActivity() {
             mAlertDialog.dismiss()
         }
 
+
+
     }
 
-    fun addQuestion(view: View) {
+
+
+    fun onAddCliclked(view: View) {
+        val fragment = ListFragment()
+        val transaction = manager.beginTransaction()
+        transaction.replace(R.id.fragment_holder, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+        Toast.makeText(applicationContext,"Questions shown",Toast.LENGTH_SHORT).show()
+    }
+
+    fun onShowClicked(view: View) {
+        val fragment  = VoteFragment()
+        val transaction = manager.beginTransaction()
+        transaction.replace(R.id.fragment_holder, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    fun onAddQuestionClicked(view: View) {
+
+        showCreateCategoryDialog()
 
     }
 }

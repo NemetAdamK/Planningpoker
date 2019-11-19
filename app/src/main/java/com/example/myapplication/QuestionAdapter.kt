@@ -20,6 +20,9 @@ import com.google.firebase.database.*
 class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>(){
 
 
+    fun add(userlist: ArrayList<Question>){
+
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.question_list, parent, false)
         return ViewHolder(v)
@@ -31,6 +34,7 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question: Question = userlist[position]
+
         holder.buttonStart.setOnClickListener {
 
             timerData(question)
@@ -43,6 +47,7 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
             holder.textViewActive.text = "Inactive"
         }
         holder.textViewTime.text = question.seconds.toString()
+
 
 
     }
@@ -122,5 +127,6 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
         val textViewActive = itemView.findViewById<TextView>(R.id.textViewActive)
         val textViewTime = itemView.findViewById<TextView>(R.id.textViewTime)
         val buttonStart = itemView.findViewById<Button>(R.id.buttonStartTimer)
+        val buttonSeeResult = itemView.findViewById<Button>(R.id.buttonSeeResults)
     }
 }
