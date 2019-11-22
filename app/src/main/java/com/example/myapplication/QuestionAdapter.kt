@@ -10,23 +10,33 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import java.security.AccessController.getContext
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.concurrent.TimeUnit
-import kotlin.time.seconds
-import com.google.firebase.FirebaseError
-import com.google.firebase.database.*
+
+import com.example.myapplication.VoteFragment
+import kotlinx.android.synthetic.main.activity_main.view.*
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 
 
-class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>(){
 
 
-    fun add(userlist: ArrayList<Question>){
 
-    }
+
+class QuestionAdapter(var userlist:ArrayList<Question>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>(){
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.question_list, parent, false)
+
         return ViewHolder(v)
     }
+
 
     override fun getItemCount(): Int {
         return userlist.size
@@ -48,9 +58,29 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
         }
         holder.textViewTime.text = question.seconds.toString()
 
+        holder.buttonView.setOnClickListener {
+            Toast.makeText(
+                it.context,
+                "Viewing results for: " + holder.textViewQuestion.text.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
 
+            val bundle = Bundle()
+            bundle.putString("Question Name", question.question)
+            bundle.putString("Group number", roomNumberString)//parameters are (key, value).
+            val activity = holder.manager as AppCompatActivity
+            val myFragment = VoteFragment()
+            myFragment.setArguments(bundle)
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_holder, myFragment).addToBackStack(null).commit()
+
+
+        }
 
     }
+
+
+
 
     private fun updateInFirebaseFinishTimer(question: Question) {
 
@@ -127,6 +157,7 @@ class QuestionAdapter(val userlist:ArrayList<Question>) : RecyclerView.Adapter<Q
         val textViewActive = itemView.findViewById<TextView>(R.id.textViewActive)
         val textViewTime = itemView.findViewById<TextView>(R.id.textViewTime)
         val buttonStart = itemView.findViewById<Button>(R.id.buttonStartTimer)
-        val buttonSeeResult = itemView.findViewById<Button>(R.id.buttonSeeResults)
+        val buttonView = itemView.findViewById<Button>(R.id.buttonSeeResults)
+        val manager = itemView.context
     }
 }

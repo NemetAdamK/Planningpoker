@@ -23,8 +23,8 @@ class VoterAdapter(val userlist:ArrayList<VotedUsers>) : RecyclerView.Adapter<Vo
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val voter: VotedUsers = userlist[position]
 
-        holder.textViewUser.text = voter.user
-        holder.textViewVote.text = voter.voted
+        holder.textViewUser.text = voter.name
+        holder.textViewVote.text = voter.vote
 
 
     }

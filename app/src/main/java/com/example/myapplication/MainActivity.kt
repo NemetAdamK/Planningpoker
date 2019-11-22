@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import com.example.myapplication.R
 import com.example.myapplication.VoteFragment
 import com.example.myapplication.VotedUsers
@@ -17,19 +18,20 @@ import kotlinx.android.synthetic.main.dialog_add_question.view.*
 
 class MainActivity : AppCompatActivity() {
 
-
     private lateinit var database: DatabaseReference
     val manager = supportFragmentManager
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val user = VotedUsers("k222k", "ss8")
         database = FirebaseDatabase.getInstance().reference
-        database.child("UserVotes").child("users").push().setValue(user)
 
-
+        val fragment  = ListFragment()
+        val transaction = manager.beginTransaction()
+        transaction.replace(R.id.fragment_holder, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
 
     }
 
@@ -53,6 +55,8 @@ class MainActivity : AppCompatActivity() {
 
             if (question.isNotEmpty()){
                 database = FirebaseDatabase.getInstance().reference
+
+
                 database.child("Questions").child("Group").child(roomNumberString).push().setValue(Question(question,false,ArrayList<VotedUsers>(),60)
                 )
 
