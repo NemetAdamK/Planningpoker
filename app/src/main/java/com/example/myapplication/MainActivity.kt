@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
 
                 database.child("Questions").child("Group").push().setValue(question)
-                database.child("GrupsForSpinner").push().setValue(question)
+                database.child("GroupsForSpinner").push().setValue(question)
                 roomNumberString=question
 
 
