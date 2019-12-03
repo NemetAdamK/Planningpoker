@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
         database.child("GroupsForSpinner").addValueEventListener(object :
             ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                rooms.clear()
+                rooms.clear();
                 for (ds in dataSnapshot.children) {
                     if (ds.value is String){
                         rooms.add(ds.value.toString())
