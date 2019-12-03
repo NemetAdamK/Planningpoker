@@ -16,6 +16,7 @@ import com.example.firebasetest.roomNumberString
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.view.View
+import com.example.firebasetest.adminName
 
 
 class ActivityLogin : AppCompatActivity() {
@@ -37,7 +38,10 @@ class ActivityLogin : AppCompatActivity() {
 
             if (nameEdit.text.isNotEmpty() && roomEdit.text.isNotEmpty()) {
                 roomNumberString = roomEdit.text.toString()
-                database.child("Questions").child("Group").setValue(roomEdit.text.toString())
+                adminName = nameEdit.text.toString()
+                database.child("Admin").setValue(roomEdit.text.toString())
+                database.child("Questions").child("Group").push().setValue(roomEdit.text.toString())
+                database.child("GroupsForSpinner").push().setValue(roomEdit.text.toString())
                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             } else {

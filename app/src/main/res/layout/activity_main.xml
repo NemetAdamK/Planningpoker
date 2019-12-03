@@ -12,9 +12,10 @@
         android:id="@+id/fragment_holder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonAddQuestion"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -24,13 +25,46 @@
         android:id="@+id/buttonAddQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="144dp"
+        android:layout_marginStart="64dp"
         android:layout_marginBottom="26dp"
         android:onClick="onAddQuestionClicked"
         android:text="Add Question"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_holder" />
+
+    <Button
+        android:id="@+id/buttonAddGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="1dp"
+        android:onClick="addGroupClicked"
+        android:text="Add Group"
+        app:layout_constraintStart_toEndOf="@+id/buttonAddQuestion"
+        app:layout_constraintTop_toTopOf="@+id/buttonAddQuestion" />
+
+    <Spinner
+        android:id="@+id/spinnerRooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAddQuestion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_holder" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="Selected room"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerRooms"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerRooms" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
